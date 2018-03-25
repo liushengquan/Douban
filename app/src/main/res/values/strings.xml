@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Douban</string>
+    <!-- 主页 -->
+    <string name="main_film">电影</string>
+    <string name="main_book">图书</string>
+    <string name="main_music">音乐</string>
+    <string name="main_event">同城</string>
+
+    <!-- 电影主页 -->
+    <string name="film_more">更多...</string>
+    <string name="film_photo">海报</string>
+
+    <!-- 电影详情页 -->
+    <string name="film_detail_sample">简介：</string>
+    <string name="film_detail_see_more">查看更多信息</string>
+
+    <!-- 图书详情页 -->
+    <string name="book_detail_want_see">想看</string>
+    <string name="book_detail_see_more">详细信息</string>
+    <string name="book_detail_sample">内容简介</string>
+    <string name="book_detail_author">作者简介</string>
+    <string name="book_detail_catalog">目录</string>
+
+    <!-- 音乐详情页 -->
+    <string name="music_detail_want_heard">想听</string>
+    <string name="music_detail_heard_now">在听</string>
+    <string name="music_detail_sunmay">简介</string>
+    <string name="music_detail_song">曲目</string>
+
+    <!-- 同城主页 -->
+    <string name="event_country_tips">当前城市：</string>
+    <string name="event_all">全部活动</string>
+    <string-array name="event_countries" >
+        <item>广州</item>
+        <item>深圳</item>
+        <item>北京</item>
+        <item>上海</item>
+    </string-array>
+    <string name="event_like">感兴趣</string>
+    <string name="event_join">要参加</string>
+    <string name="event_detail">活动详情</string>
+
+    <string name="load_more">加载更多...</string>
+</resources>

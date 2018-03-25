@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_small_magin">2dp</dimen>
+    <dimen name="text_nomal_magin">4dp</dimen>
+    <dimen name="text_big_magin">8dp</dimen>
+
+    <dimen name="text_small_size">12sp</dimen>
+    <dimen name="text_nomal_size">14sp</dimen>
+    <dimen name="text_big_size">16sp</dimen>
+    <dimen name="text_xbig_size">24sp</dimen>
+
+    <dimen name="padding_small">3dp</dimen>
+    <dimen name="padding_nomal">5dp</dimen>
+    <dimen name="padding_big">8dp</dimen>
+
+</resources>
