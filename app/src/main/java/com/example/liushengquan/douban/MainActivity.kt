@@ -62,6 +62,7 @@ class MainActivity : BaseActivity(),View.OnClickListener {
     }
 
     fun initViewpagerAndFragment(){
+
         mFilmFragment = FilmFragment.newInstance()
         mBookFragment = BookFragment.newInstance()
         mMusicFragment = MusicFragment.newInstance()
