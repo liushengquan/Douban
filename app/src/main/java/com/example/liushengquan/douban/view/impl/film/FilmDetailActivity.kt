@@ -1,7 +1,12 @@
 package com.example.liushengquan.douban.view.impl.film
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.transition.Fade
+import android.transition.Slide
+import android.view.Gravity
 import com.example.liushengquan.douban.R
 import com.example.liushengquan.douban.base.BaseActivity
 import com.example.liushengquan.douban.bean.Constant
@@ -16,6 +21,23 @@ class FilmDetailActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
         initView()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            setupWindowAnimations()
+    }
+
+    @SuppressLint("NewApi")
+    private fun setupWindowAnimations() {
+        val slide = Slide(Gravity.LEFT)
+        slide.duration = 1000
+        slide.startDelay = 1000
+        slide.excludeTarget(android.R.id.statusBarBackground,true)
+        slide.excludeTarget(R.id.abl_base,true)
+        window.enterTransition = slide
+
+        val fade = Fade()
+        window.returnTransition = fade
+        window.allowReturnTransitionOverlap = false
     }
 
     override fun initView() {
@@ -26,7 +48,10 @@ class FilmDetailActivity: BaseActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 //        supportActionBar!!.setHomeAsUpIndicator(R.drawable.back)
         tb_base.setNavigationOnClickListener({
-            finish()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                finishAfterTransition()
+            else
+                finish()
         })
 
         cltl_base.title = title

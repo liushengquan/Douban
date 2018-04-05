@@ -102,34 +102,34 @@ class FilmDetailFragment: BaseFragment(), IShowFilmDetail {
         }
         tv_num.text = filmDetail.ratings_count.toString() + "人评分"
         tv_date.text = filmDetail.year + "年  出品"
-        if (filmDetail!!.countries != null && filmDetail!!.countries!!.isNotEmpty()) {
-            tv_contury!!.text = filmDetail!!.countries!![0]
+        if (filmDetail.countries != null && filmDetail.countries!!.isNotEmpty()) {
+            tv_contury.text = filmDetail.countries!![0]
         }
-        if (filmDetail!!.genres != null && filmDetail!!.genres!!.isNotEmpty()) {
+        if (filmDetail.genres != null && filmDetail.genres!!.isNotEmpty()) {
             val stringBuilder = StringBuilder()
-            for (s in filmDetail!!.genres!!) {
+            for (s in filmDetail.genres!!) {
                 stringBuilder.append(s + "/")
             }
             tv_type.text = stringBuilder.toString().substring(0, stringBuilder.toString().length - 1)
         }
-        tv_sunmery.text = filmDetail!!.summary
-        tv_title.text = filmDetail!!.original_title + " [原名]"
+        tv_sunmery.text = filmDetail.summary
+        tv_title.text = filmDetail.original_title + " [原名]"
 
         initFilmPerson(filmDetail)
         mPersonAdatper!!.addDatas(mPersonList)
         mPersonAdatper!!.notifyDataSetChanged()
     }
 
-    fun initFilmPerson(filmDetail: FilmDetail){
+    private fun initFilmPerson(filmDetail: FilmDetail){
         if (filmDetail.directors != null && filmDetail.directors!!.isNotEmpty()){
             for(director in filmDetail.directors!!){
-                var filmPerson = FilmPerson(director!!.name,director!!.avatars!!.medium,"[导演]")
+                var filmPerson = FilmPerson(director.name,director.avatars!!.medium,"[导演]")
                 mPersonList.add(filmPerson)
             }
         }
-        if (filmDetail!!.casts != null && filmDetail!!.casts!!.isNotEmpty()){
-            for(cast in filmDetail!!.casts!!){
-                var filmPerson = FilmPerson(cast!!.name,cast!!.avatars!!.medium,"[演员]")
+        if (filmDetail.casts != null && filmDetail.casts!!.isNotEmpty()){
+            for(cast in filmDetail.casts!!){
+                var filmPerson = FilmPerson(cast.name,cast.avatars!!.medium,"[演员]")
                 mPersonList.add(filmPerson)
             }
         }

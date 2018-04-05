@@ -1,13 +1,18 @@
 package com.example.liushengquan.douban.view.impl.film
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.transition.Explode
+import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
 import com.example.liushengquan.douban.R
 import com.example.liushengquan.douban.base.BaseFragment
 import com.example.liushengquan.douban.bean.Constant
@@ -25,6 +30,7 @@ import com.example.liushengquan.douban.view.interf.film.IShowUsBox
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 /**
  * Created by liushengquan on 2018/1/13.
@@ -55,7 +61,23 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRepertory = DoubanRepertory(DatabaseRepertory())
-        mFilmPresenter = FilmPresenter(mRepertory as DoubanRepertory)
+        mFilmPresenter = FilmPresenter(mRepertory)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            setupWindowAnimations()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun setupWindowAnimations() {
+        val fade = Fade()
+        fade.duration = 1000
+        activity.window.exitTransition = fade
+
+        val explode = Explode()
+        explode.duration = 1000
+        explode.excludeTarget(android.R.id.statusBarBackground,true)
+        activity.window.reenterTransition = explode
+        activity.window.allowEnterTransitionOverlap = false
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,26 +89,26 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
 
     override fun initView() {
         //初始化
-        mRecyclerView = mRootView!!.findViewById(R.id.rv_film)
+        mRecyclerView = mRootView.findViewById(R.id.rv_film)
         mGridSectionAdapter = SectionedRecyclerViewAdapter()
         val glm = GridLayoutManager(mContext,3)
         glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                when (mGridSectionAdapter!!.getSectionItemViewType(position)) {
+                when (mGridSectionAdapter.getSectionItemViewType(position)) {
                     SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER -> return 3
                     else -> return 1
                 }
             }
         }
-        mRecyclerView!!.layoutManager = glm
-        mRecyclerView!!.adapter = mGridSectionAdapter
+        mRecyclerView.layoutManager = glm
+        mRecyclerView.adapter = mGridSectionAdapter
 
     }
 
     override fun initData() {
-        mFilmPresenter!!.getFilmLive(this)
-        mFilmPresenter!!.getFilmTop250(this,mCount,mCount+SIZE,false)
-        mFilmPresenter!!.getFilmUsBox(this)
+        mFilmPresenter.getFilmLive(this)
+        mFilmPresenter.getFilmTop250(this,mCount,mCount+SIZE,false)
+        mFilmPresenter.getFilmUsBox(this)
     }
 
     override fun isActive(): Boolean {
@@ -101,13 +123,13 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
         }
         if(!isLoadMore) {
             mTop250Session = GridSection(mContext, 3, top250List)
-            mTop250Session!!.setOnLoadMoreCallbak(this)
-            mTop250Session!!.setOnItemClickListener(this)
-            mGridSectionAdapter!!.addSection(mTop250Session)
+            mTop250Session.setOnLoadMoreCallbak(this)
+            mTop250Session.setOnItemClickListener(this)
+            mGridSectionAdapter.addSection(mTop250Session)
         }
         else
-            mTop250Session!!.addDatas(top250List)
-        mGridSectionAdapter!!.notifyDataSetChanged()
+            mTop250Session.addDatas(top250List)
+        mGridSectionAdapter.notifyDataSetChanged()
     }
 
     override fun showFilmLive(filmLive: FilmLive) {
@@ -117,10 +139,10 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
             filmLiveList.add(filmData)
         }
         mFilmLiveSession = GridSection(mContext,0,filmLiveList)
-        mFilmLiveSession!!.setOnLoadMoreCallbak(this)
-        mFilmLiveSession!!.setOnItemClickListener(this)
-        mGridSectionAdapter!!.addSection(mFilmLiveSession)
-        mGridSectionAdapter!!.notifyDataSetChanged()
+        mFilmLiveSession.setOnLoadMoreCallbak(this)
+        mFilmLiveSession.setOnItemClickListener(this)
+        mGridSectionAdapter.addSection(mFilmLiveSession)
+        mGridSectionAdapter.notifyDataSetChanged()
     }
 
     override fun showFilmUsBox(filmUsBox: FilmUsBox) {
@@ -130,10 +152,10 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
             usBoxList.add(filmData)
         }
         mUsBoxSession = GridSection(mContext,2,usBoxList)
-        mUsBoxSession!!.setOnLoadMoreCallbak(this)
-        mUsBoxSession!!.setOnItemClickListener(this)
-        mGridSectionAdapter!!.addSection(mUsBoxSession)
-        mGridSectionAdapter!!.notifyDataSetChanged()
+        mUsBoxSession.setOnLoadMoreCallbak(this)
+        mUsBoxSession.setOnItemClickListener(this)
+        mGridSectionAdapter.addSection(mUsBoxSession)
+        mGridSectionAdapter.notifyDataSetChanged()
     }
 
     override fun loadMore(type: Int) {
@@ -146,27 +168,27 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
             }
         }
         when (type) {
-            0 -> if (!mFilmLiveSession!!.isLoadMore()) {
-                mFilmLiveSession!!.setLoadMore(true)
-                mGridSectionAdapter!!.notifyDataSetChanged()
+            0 -> if (!mFilmLiveSession.isLoadMore()) {
+                mFilmLiveSession.setLoadMore(true)
+                mGridSectionAdapter.notifyDataSetChanged()
             } else
                 showToast("没有更多了")
-            1 -> if (!mFilmLiveSession!!.isLoadMore()) {
-                mFilmLiveSession!!.setLoadMore(true)
-                mGridSectionAdapter!!.notifyDataSetChanged()
+            1 -> if (!mFilmLiveSession.isLoadMore()) {
+                mFilmLiveSession.setLoadMore(true)
+                mGridSectionAdapter.notifyDataSetChanged()
             } else
                 showToast("没有更多了")
-            2 -> if (!mUsBoxSession!!.isLoadMore()) {
-                mUsBoxSession!!.setLoadMore(true)
-                mGridSectionAdapter!!.notifyDataSetChanged()
+            2 -> if (!mUsBoxSession.isLoadMore()) {
+                mUsBoxSession.setLoadMore(true)
+                mGridSectionAdapter.notifyDataSetChanged()
             } else
                 showToast("没有更多了")
-            3 -> if (!mTop250Session!!.isLoadMore()) {
-                mTop250Session!!.setLoadMore(true)
-                mGridSectionAdapter!!.notifyDataSetChanged()
+            3 -> if (!mTop250Session.isLoadMore()) {
+                mTop250Session.setLoadMore(true)
+                mGridSectionAdapter.notifyDataSetChanged()
             } else {
                 mCount+=SIZE
-                mFilmPresenter!!.getFilmTop250(this, mCount, mCount + SIZE, true)
+                mFilmPresenter.getFilmTop250(this, mCount, mCount + SIZE, true)
             }
         }
     }
@@ -174,9 +196,14 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
     override fun OnItemClick(view: View, position: Int, data: FilmData) {
         var intent = Intent()
         intent.setClass(activity,FilmDetailActivity::class.java)
-        intent!!.putExtra(Constant.FILM_ID,data!!.id)
-        intent!!.putExtra(Constant.FILM_TITLE,data!!.name)
-        startActivityByIntent(intent)
+        intent.putExtra(Constant.FILM_ID, data.id)
+        intent.putExtra(Constant.FILM_TITLE, data.name)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(activity, view.findViewById<ImageView>(R.id.iv_film_grid_photo), "film_image")
+            startActivity(intent, options.toBundle())
+        } else {
+            startActivityByIntent(intent)
+        }
     }
 
     override fun showFilmLiveFail(message: String) {
