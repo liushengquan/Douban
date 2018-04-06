@@ -1,6 +1,8 @@
 package com.example.liushengquan.douban.view.impl.event
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.Spinner
 import com.example.liushengquan.douban.R
 import com.example.liushengquan.douban.adapter.EventAdapter
@@ -18,6 +21,7 @@ import com.example.liushengquan.douban.bean.event.Events
 import com.example.liushengquan.douban.model.DatabaseRepertory
 import com.example.liushengquan.douban.model.DoubanRepertory
 import com.example.liushengquan.douban.presenter.EventPresenter
+import com.example.liushengquan.douban.util.AnimationUtils
 import com.example.liushengquan.douban.view.interf.OnItemClickListener
 import com.example.liushengquan.douban.view.interf.event.IShowEvents
 
@@ -50,6 +54,9 @@ class EventFragment : BaseFragment(), IShowEvents, OnItemClickListener<EventFrag
         super.onCreate(savedInstanceState)
         mRepertory = DoubanRepertory(DatabaseRepertory())
         mEventPresenter = EventPresenter(mRepertory)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            AnimationUtils.setupWindowExitAnimations(activity.window)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -133,7 +140,12 @@ class EventFragment : BaseFragment(), IShowEvents, OnItemClickListener<EventFrag
         intent.setClass(activity,EventDetailActivity::class.java)
         intent!!.putExtra(Constant.EVENT_ID,data!!.id)
         intent!!.putExtra(Constant.EVENT_TITLE,data!!.title)
-        startActivityByIntent(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(activity, view.findViewById<ImageView>(R.id.iv_event_photo), "event_image")
+            startActivity(intent, options.toBundle())
+        } else {
+            startActivityByIntent(intent)
+        }
     }
 
     data class EventData(var id:String?,var title:String?,var img: String?, var date: String?)

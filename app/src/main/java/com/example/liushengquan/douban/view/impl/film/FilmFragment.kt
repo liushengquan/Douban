@@ -4,11 +4,8 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.transition.Explode
-import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +19,7 @@ import com.example.liushengquan.douban.bean.filmlive.FilmLive
 import com.example.liushengquan.douban.model.DatabaseRepertory
 import com.example.liushengquan.douban.model.DoubanRepertory
 import com.example.liushengquan.douban.presenter.FilmPresenter
+import com.example.liushengquan.douban.util.AnimationUtils
 import com.example.liushengquan.douban.view.interf.OnItemClickListener
 import com.example.liushengquan.douban.view.interf.OnLoadMoreCallbak
 import com.example.liushengquan.douban.view.interf.film.IShowFilmLive
@@ -64,20 +62,7 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
         mFilmPresenter = FilmPresenter(mRepertory)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            setupWindowAnimations()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setupWindowAnimations() {
-        val fade = Fade()
-        fade.duration = 1000
-        activity.window.exitTransition = fade
-
-        val explode = Explode()
-        explode.duration = 1000
-        explode.excludeTarget(android.R.id.statusBarBackground,true)
-        activity.window.reenterTransition = explode
-        activity.window.allowEnterTransitionOverlap = false
+            AnimationUtils.setupWindowExitAnimations(activity.window)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -102,7 +87,6 @@ class FilmFragment: BaseFragment(),IShowFilmLive,IShowUsBox,IShowTop250,OnLoadMo
         }
         mRecyclerView.layoutManager = glm
         mRecyclerView.adapter = mGridSectionAdapter
-
     }
 
     override fun initData() {

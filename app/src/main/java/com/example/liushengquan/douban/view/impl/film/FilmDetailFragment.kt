@@ -91,7 +91,6 @@ class FilmDetailFragment: BaseFragment(), IShowFilmDetail {
 
         if(!TextUtils.isEmpty(mId))
             mFilmPresenter!!.getFilmDetail(this,mId)
-
     }
 
     override fun showFilmDetail(filmDetail: FilmDetail) {

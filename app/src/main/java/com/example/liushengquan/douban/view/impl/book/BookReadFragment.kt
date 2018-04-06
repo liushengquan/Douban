@@ -1,6 +1,8 @@
 package com.example.liushengquan.douban.view.impl.book
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.GridLayoutManager
@@ -9,6 +11,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import com.example.liushengquan.douban.R
 import com.example.liushengquan.douban.adapter.BookAdapter
@@ -18,6 +21,7 @@ import com.example.liushengquan.douban.bean.book.Books
 import com.example.liushengquan.douban.model.DatabaseRepertory
 import com.example.liushengquan.douban.model.DoubanRepertory
 import com.example.liushengquan.douban.presenter.BookPresenter
+import com.example.liushengquan.douban.util.AnimationUtils
 import com.example.liushengquan.douban.view.interf.OnItemClickListener
 import com.example.liushengquan.douban.view.interf.book.IShowBooks
 import java.util.concurrent.ExecutorService
@@ -56,6 +60,9 @@ class BookReadFragment : BaseFragment() , IShowBooks, OnItemClickListener<BookRe
         mRepertory = DoubanRepertory(DatabaseRepertory())
         mBookPresenter = BookPresenter(mRepertory)
         mTag = arguments.getString(Constant.BOOK_TAG)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            AnimationUtils.setupWindowExitAnimations(activity.window)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,9 +80,7 @@ class BookReadFragment : BaseFragment() , IShowBooks, OnItemClickListener<BookRe
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     var lastVisibleItem = mLayoutManager.findLastVisibleItemPosition()
                     if (mLayoutManager.itemCount == 1) {
-                        if (mBookAdapter != null) {
                             mBookAdapter.updateState(mBookAdapter.LOAD_NONE)
-                        }
                         return
                     }
                     if (lastVisibleItem + 1 == mLayoutManager.itemCount) {
@@ -143,7 +148,12 @@ class BookReadFragment : BaseFragment() , IShowBooks, OnItemClickListener<BookRe
         intent.setClass(activity,BookDetailActivity::class.java)
         intent.putExtra(Constant.BOOK_ID,data.id)
         intent.putExtra(Constant.BOOK_TITLE,data.title)
-        startActivityByIntent(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(activity, view.findViewById<ImageView>(R.id.iv_book_photo), "book_image")
+            startActivity(intent, options.toBundle())
+        } else {
+            startActivityByIntent(intent)
+        }
     }
 
     data class BookData(var id:String?,var title:String?,var img: String?, var grade: String?)

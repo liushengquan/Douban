@@ -16,7 +16,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:transitionName = "film_image"
-            android:src="@mipmap/ic_launcher"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
